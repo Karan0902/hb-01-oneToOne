@@ -35,6 +35,8 @@ public class DeleteDemo {
 			
 //			delete the instructor
 			if(tempInstructor != null) {
+//				will ALSO delete instructor_detail objects
+//				due to CascadeType.ALL
 				System.out.println("Deleting: " + tempInstructor);
 				session.delete(tempInstructor);
 			}
