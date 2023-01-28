@@ -28,7 +28,7 @@ public class DeleteInstructorDetailDemo {
 			session.beginTransaction();
 			
 //			get the instructor detail object
-			int theId = 2;
+			int theId = 3;
 			InstructorDetail instructorDetail = session.get(InstructorDetail.class, theId);
 			
 //			print the instructor detail
@@ -38,7 +38,13 @@ public class DeleteInstructorDetailDemo {
 			System.out.println("The associated Intructor: " + instructorDetail.getInstructor());
 			
 //			now lets delete the instructor_detail
-			System.out.println("Deleting Instructor: " + instructorDetail);
+			System.out.println("Deleting Instructor Detail: " + instructorDetail);
+			
+//			remove the associated object reference
+//			break bi-directional link
+			instructorDetail.getInstructor().setInstructorDetail(null);
+			
+//			delete instructor_detail
 			session.delete(instructorDetail);
 			
 //			commit the transaction
