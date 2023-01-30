@@ -9,7 +9,7 @@ import com.luv2code.hibernate.demo.entity.InstructorDetail;
 import com.luv2code.hibernate.demo.entity.Student;
 
 
-public class DeleteDemo {
+public class DeleteInstructorDetailDemo {
 
 	public static void main(String[] args) {
 		
@@ -27,25 +27,35 @@ public class DeleteDemo {
 //			start a transaction
 			session.beginTransaction();
 			
-//			get instructor by primary key
-			int theId = 1;
-			Instructor tempInstructor = session.get(Instructor.class, theId);
+//			get the instructor detail object
+			int theId = 3;
+			InstructorDetail instructorDetail = session.get(InstructorDetail.class, theId);
 			
-			System.out.println("Found instructor: " + tempInstructor);
+//			print the instructor detail
+			System.out.println("Instructor Detail: " + instructorDetail);
+						
+//			print the associated instructor
+			System.out.println("The associated Intructor: " + instructorDetail.getInstructor());
 			
-//			delete the instructor
-			if(tempInstructor != null) {
-//				will ALSO delete instructor_detail objects
-//				due to CascadeType.ALL
-				System.out.println("Deleting: " + tempInstructor);
-				session.delete(tempInstructor);
-			}
+//			now lets delete the instructor_detail
+			System.out.println("Deleting Instructor Detail: " + instructorDetail);
+			
+//			remove the associated object reference
+//			break bi-directional link
+			instructorDetail.getInstructor().setInstructorDetail(null);
+			
+//			delete instructor_detail
+			session.delete(instructorDetail);
 			
 //			commit the transaction
 			session.getTransaction().commit();
 			
 			System.out.println("Done!");
-		} finally {
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+//			handle connection leak issue
+			session.close();
 			factory.close();
 		}
 	}

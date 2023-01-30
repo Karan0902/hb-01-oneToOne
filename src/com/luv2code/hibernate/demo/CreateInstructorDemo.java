@@ -4,12 +4,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import com.luv2code.hibernate.demo.entity.Course;
 import com.luv2code.hibernate.demo.entity.Instructor;
 import com.luv2code.hibernate.demo.entity.InstructorDetail;
 import com.luv2code.hibernate.demo.entity.Student;
 
 
-public class DeleteDemo {
+public class CreateInstructorDemo {
 
 	public static void main(String[] args) {
 		
@@ -18,34 +19,33 @@ public class DeleteDemo {
 									.configure("hibernate.cfg.xml")
 									.addAnnotatedClass(Instructor.class)
 									.addAnnotatedClass(InstructorDetail.class)
+									.addAnnotatedClass(Course.class)
 									.buildSessionFactory();
 		
 //		create session
 		Session session = factory.getCurrentSession();
 		
 		try {
+			Instructor tempInstructor = new Instructor("Susan", "Public", "susan@luv2code.com");
+			InstructorDetail tempInstructorDetail = new InstructorDetail("htttp://youtube.com", "Video Games");
+			
+//			associate the objects
+			tempInstructor.setInstructorDetail(tempInstructorDetail);
+			
 //			start a transaction
 			session.beginTransaction();
 			
-//			get instructor by primary key
-			int theId = 1;
-			Instructor tempInstructor = session.get(Instructor.class, theId);
-			
-			System.out.println("Found instructor: " + tempInstructor);
-			
-//			delete the instructor
-			if(tempInstructor != null) {
-//				will ALSO delete instructor_detail objects
-//				due to CascadeType.ALL
-				System.out.println("Deleting: " + tempInstructor);
-				session.delete(tempInstructor);
-			}
+//			save the instructor in DB
+//			note: this will also save InstructorDetail because of CascadeType.ALL
+			System.out.println("Saving instructor... " + tempInstructor);
+			session.save(tempInstructor);
 			
 //			commit the transaction
 			session.getTransaction().commit();
 			
 			System.out.println("Done!");
 		} finally {
+			session.close();
 			factory.close();
 		}
 	}
