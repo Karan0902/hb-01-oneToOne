@@ -26,6 +26,7 @@ public class GetInstructorCoursesDemo {
 		Session session = factory.getCurrentSession();
 		
 		try {
+//			add comment
 //			start a transaction
 			session.beginTransaction();
 			
